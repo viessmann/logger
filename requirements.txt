@@ -1,0 +1,9 @@
+
+# -- qualiter
+-e git+https://github.com/viessmann/qualiter.git#egg=qualiter
+
+# -- used for logging
+applicationinsights==0.11.5
+
+# -- json logger formatter
+python-json-logger==0.1.9
