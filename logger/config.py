@@ -4,9 +4,10 @@ from logging import config
 
 def config_loggers(
         app_insights_key=None,
-        correlation_id=None,
+        app_insights_app_id=None,
         app_version=None,
         app_name=None,
+        correlation_id=None,
         execution_env_name=None):
 
     if app_insights_key:
@@ -19,7 +20,7 @@ def config_loggers(
             },
             'formatters': {
                 'json_formatter': {
-                    'class': 'ares.logger.JsonFormatter',
+                    'class': 'logger.formatters.JsonFormatter',
                 },
             },
             'handlers': {
@@ -30,12 +31,12 @@ def config_loggers(
                     'stream': 'ext://sys.stdout',
                 },
                 'application_insights': {
-                    'class': 'ares.logger.ApplicationInsightsHandler',
+                    'class': 'logger.handlers.ApplicationInsightsHandler',
                     'formatter': 'json_formatter',
                     'level': 'INFO',
                     'correlation_id': correlation_id,
                     'app_insights_key': app_insights_key,
-                    'app_insights_app_id': 'ARES',
+                    'app_insights_app_id': app_insights_app_id,
                     'app_insights_app_version': app_version,
                     'app_insights_device_id': execution_env_name,
                     'app_insights_app_operation_name': app_name,
@@ -58,7 +59,7 @@ def config_loggers(
             },
             'formatters': {
                 'json_formatter': {
-                    'class': 'ares.logger.JsonFormatter',
+                    'class': 'logger.formatters.JsonFormatter',
                 },
             },
             'handlers': {
