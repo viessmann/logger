@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Logger',
-    version='0.0.1',
+    version='0.0.2',
     description='Logger integrating one with Application Insights',
     url='https://git.viessmann.com/projects/DEC/repos/logger',
     author='Viessmann Data Chapter Team',
