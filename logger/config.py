@@ -1,5 +1,38 @@
 
+import logging
 from logging import config
+
+
+LOG_CONFIG = None
+
+
+class LoggingNotConfiguredError(Exception):
+    """
+    Error to be raised whenever one wants to use helper functions that are
+    assuming that logging was already configured when in fact it wasn't.
+    """
+
+    pass
+
+
+def with_logger(fn):
+
+    def inner(*args):
+        if not LOG_CONFIG:
+            raise LoggingNotConfiguredError()
+
+        config.dictConfig(LOG_CONFIG)
+        logger = logging.getLogger()
+
+        try:
+            return fn(*args, logger)
+
+        except Exception as e:
+            logger.error('UNHANDLED_EXCEPTION_CAUGHT', exc_info=True)
+
+            raise e
+
+    return inner
 
 
 def config_loggers(
@@ -10,8 +43,11 @@ def config_loggers(
         correlation_id=None,
         execution_env_name=None):
 
+    # -- declare `LOG_CONFIG` to overload the globally accessible value
+    global LOG_CONFIG
+
     if app_insights_key:
-        config.dictConfig({
+        LOG_CONFIG = {
             'version': 1,
             'disable_existing_loggers': True,
             'root': {
@@ -47,10 +83,10 @@ def config_loggers(
                     'handlers': ['console', 'application_insights'],
                 }
             }
-        })
+        }
 
     else:
-        config.dictConfig({
+        LOG_CONFIG = {
             'version': 1,
             'disable_existing_loggers': True,
             'root': {
@@ -75,4 +111,6 @@ def config_loggers(
                     'handlers': ['console'],
                 }
             }
-        })
+        }
+
+    config.dictConfig(LOG_CONFIG)
